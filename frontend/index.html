@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow - Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="logo">📋 TaskFlow</div>
+      </div>
+      
+      <nav>
+        <div class="nav-item active" onclick="showPage('board')" id="nav-board">
+          📋 Board <span class="badge" id="total-badge">0</span>
+        </div>
+        <div class="nav-item" onclick="showPage('backlog')" id="nav-backlog">
+          📝 Backlog
+        </div>
+        <div class="nav-item" onclick="showPage('analytics')" id="nav-analytics">
+          📊 Analytics
+        </div>
+        <div class="nav-item" onclick="showPage('settings')" id="nav-settings">
+          ⚙️ Settings
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="avatar">MK</div>
+        <div class="user-info">
+          <div class="user-name">Moulish K.</div>
+          <div class="user-role">Developer</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <input type="text" id="search-input" class="search-box" placeholder="🔍 Search tasks...">
+        <div class="topbar-right">
+          <button onclick="openModal()" class="btn-primary">+ Add Task</button>
+        </div>
+      </div>
+
+      <!-- Board View (Default) -->
+      <main class="board">
+        <div class="column" id="col-todo">
+          <div class="col-header">
+            📋 TO DO <span class="count" id="cnt-todo">0</span>
+          </div>
+        </div>
+        <div class="column" id="col-inprogress">
+          <div class="col-header">
+            🔄 IN PROGRESS <span class="count" id="cnt-inprogress">0</span>
+          </div>
+        </div>
+        <div class="column" id="col-review">
+          <div class="col-header">
+            👀 REVIEW <span class="count" id="cnt-review">0</span>
+          </div>
+        </div>
+        <div class="column" id="col-done">
+          <div class="col-header">
+            ✅ DONE <span class="count" id="cnt-done">0</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- Status Bar -->
+      <div class="status-bar">🟢 All changes saved</div>
+    </div>
+
+    <!-- Backlog Page -->
+    <div class="page" id="page-backlog">
+      <div class="page-header">
+        <h2>📝 Backlog</h2>
+        <button onclick="openModal()" class="btn-primary">+ Add Task</button>
+      </div>
+      <table class="backlog-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="backlog-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Analytics Page -->
+    <div class="page" id="page-analytics">
+      <div class="page-header">
+        <h2>📊 Analytics Dashboard</h2>
+      </div>
+      <div class="analytics-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-total">0</div>
+          <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-todo">0</div>
+          <div class="stat-label">To Do</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-inprogress">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-review">0</div>
+          <div class="stat-label">In Review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-done">0</div>
+          <div class="stat-label">Done</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-high">0</div>
+          <div class="stat-label">High Priority</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-bugs">0</div>
+          <div class="stat-label">Bugs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-features">0</div>
+          <div class="stat-label">Features</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-completed">0</div>
+          <div class="stat-label">Completed %</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div class="page" id="page-settings">
+      <div class="page-header">
+        <h2>⚙️ Settings</h2>
+      </div>
+      <div class="settings-card">
+        <h3>👤 Profile Settings</h3>
+        <label>Full Name</label>
+        <input type="text" id="set-name" value="Moulish K." />
+        <label>Job Role</label>
+        <input type="text" id="set-role" value="Developer" />
+        <label>Email</label>
+        <input type="email" id="set-email" value="moulish@example.com" />
+        <button onclick="saveSettings()">💾 Save Changes</button>
+      </div>
+
+      <div class="settings-card">
+        <h3>🎨 Theme</h3>
+        <label>Current Theme</label>
+        <select id="set-theme">
+          <option value="light">☀️ Light Mode</option>
+          <option value="dark">🌙 Dark Mode</option>
+        </select>
+      </div>
+
+      <div class="settings-card danger-zone">
+        <h3>⚠️ Danger Zone</h3>
+        <p>Delete all tasks permanently. This action cannot be undone.</p>
+        <button class="btn-danger" onclick="clearAllTasks()">🗑️ Delete All Tasks</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">New Task</h3>
+        <button onclick="closeModal()" class="close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Task Title *</label>
+        <input type="text" id="f-title" placeholder="Enter task title...">
+
+        <label>Priority</label>
+        <select id="f-priority">
+          <option value="low">Low</option>
+          <option value="mid" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label>Type</label>
+        <select id="f-type">
+          <option value="feat">Feature</option>
+          <option value="bug">Bug</option>
+          <option value="chore">Chore</option>
+        </select>
+
+        <label>Status</label>
+        <select id="f-status">
+          <option value="todo" selected>To Do</option>
+          <option value="inprogress">In Progress</option>
+          <option value="review">Review</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+        <button onclick="saveTask()" class="btn-primary">Save Task</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
